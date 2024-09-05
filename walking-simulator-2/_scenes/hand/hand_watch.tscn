@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://bt5ekwppxuajw"]
+
+[ext_resource type="PackedScene" uid="uid://db26ms8s0ib7u" path="res://_assets/_gltf/hands/hand_watch.gltf" id="1_gd5qu"]
+[ext_resource type="Script" path="res://_assets/_gltf/hands/hand_watch.gd" id="2_4qiu1"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3j0vt"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ok6ip"]
+animation = &"checkWatch"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_wl1ft"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_3j0vt")
+blend_point_0/pos = -1.0
+blend_point_1/node = SubResource("AnimationNodeAnimation_ok6ip")
+blend_point_1/pos = 1.0
+min_space = -1.04
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_povfv"]
+graph_offset = Vector2(-154.207, 6.55372)
+nodes/BlendSpace1D/node = SubResource("AnimationNodeBlendSpace1D_wl1ft")
+nodes/BlendSpace1D/position = Vector2(-20, 100)
+node_connections = [&"output", 0, &"BlendSpace1D"]
+
+[node name="hand_watch" instance=ExtResource("1_gd5qu")]
+script = ExtResource("2_4qiu1")
+
+[node name="watch" parent="right/Skeleton3D" index="0"]
+transform = Transform3D(0.558844, 0, 0, 0, -1.61748e-08, 0.558844, 0, -0.558844, -1.61748e-08, -0.0443269, 4.12514, -0.030287)
+
+[node name="time" type="Label3D" parent="right/Skeleton3D/watch/watch" index="0"]
+transform = Transform3D(-2.74755e-08, -0.628566, -2.74755e-08, 1.77636e-15, -2.74755e-08, 0.628566, -0.628566, 2.74755e-08, 3.55271e-15, -0.252819, 0.338344, -0.0249534)
+text = "time: 	"
+
+[node name="calories" type="Label3D" parent="right/Skeleton3D/watch/watch" index="1"]
+transform = Transform3D(-2.37842e-08, -0.544118, -2.37842e-08, 1.77636e-15, -2.37842e-08, 0.544118, -0.544118, 2.37842e-08, 1.77636e-15, -0.0639839, 0.326858, -0.00312996)
+modulate = Color(0.14865, 0.387703, 0.866998, 1)
+text = "calories burned:"
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2"]
+tree_root = SubResource("AnimationNodeBlendTree_povfv")
+anim_player = NodePath("../AnimationPlayer")
+parameters/BlendSpace1D/blend_position = -1.0

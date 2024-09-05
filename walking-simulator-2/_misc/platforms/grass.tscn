@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://d4gv7ywkw4dp2"]
+
+[ext_resource type="PackedScene" uid="uid://di7bptxes2v4t" path="res://_assets/_gltf/grass/grass.gltf" id="1_ol45d"]
+[ext_resource type="Script" path="res://_misc/platforms/grass.gd" id="2_885qs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_if088"]
+size = Vector3(124.72, 1, 124.72)
+
+[node name="grass" instance=ExtResource("1_ol45d")]
+script = ExtResource("2_885qs")
+
+[node name="north" type="Node3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 124.72)
+
+[node name="northeast" type="Node3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -124.72, 0, 124.72)
+
+[node name="east" type="Node3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -124.72, 0, 0)
+
+[node name="southeast" type="Node3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -124.72, 0, -124.72)
+
+[node name="south" type="Node3D" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -124.72)
+
+[node name="southwest" type="Node3D" parent="." index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124.72, 0, -124.72)
+
+[node name="west" type="Node3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124.72, 0, 0)
+
+[node name="northwest" type="Node3D" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124.72, 0, 124.72)
+
+[node name="Area3D" type="Area3D" parent="." index="9"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.897583, 0, 0.86113)
+shape = SubResource("BoxShape3D_if088")
+
+[node name="debugVector" type="RayCast3D" parent="." index="10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.39584, 0)
+debug_shape_custom_color = Color(0.760203, 3.70607e-06, 4.81307e-07, 1)
+debug_shape_thickness = 5
+
+[node name="debugVector2" type="RayCast3D" parent="." index="11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.78357, 0)
+debug_shape_custom_color = Color(0.247058, 0.227232, 1, 1)
+debug_shape_thickness = 5
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

@@ -1,0 +1,83 @@
+[gd_scene load_steps=12 format=3 uid="uid://7cn3yc8lgewu"]
+
+[ext_resource type="Script" path="res://_scenes/main.gd" id="1_j4fdy"]
+[ext_resource type="Script" path="res://_player/scripts/player.gd" id="1_rxbb2"]
+[ext_resource type="PackedScene" uid="uid://di7bptxes2v4t" path="res://_assets/_gltf/grass/grass.gltf" id="2_e6t7w"]
+[ext_resource type="Script" path="res://_scenes/head.gd" id="3_qbo70"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_pgvq1"]
+
+[sub_resource type="Sky" id="Sky_yg5oo"]
+sky_material = SubResource("ProceduralSkyMaterial_pgvq1")
+
+[sub_resource type="Environment" id="Environment_i4y0x"]
+background_mode = 2
+sky = SubResource("Sky_yg5oo")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yofco"]
+
+[sub_resource type="Animation" id="Animation_njm0v"]
+resource_name = "head_bob"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.721289, 0), Vector3(0, 0.8, 0), Vector3(0, 0.721289, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_g6m6e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.721289, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pcgum"]
+_data = {
+"RESET": SubResource("Animation_g6m6e"),
+"head_bob": SubResource("Animation_njm0v")
+}
+
+[node name="main" type="Node3D"]
+script = ExtResource("1_j4fdy")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i4y0x")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.79578, 0.605586, 0, -0.605586, 0.79578, 0, 0, 0)
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+script = ExtResource("1_rxbb2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_yofco")
+
+[node name="head" type="Node3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.721289, 0)
+script = ExtResource("3_qbo70")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/head"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D/head"]
+libraries = {
+"": SubResource("AnimationLibrary_pcgum")
+}
+
+[node name="grass" parent="." instance=ExtResource("2_e6t7w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7.06848, 0)

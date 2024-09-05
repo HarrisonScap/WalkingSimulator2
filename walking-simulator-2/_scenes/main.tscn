@@ -1,0 +1,129 @@
+[gd_scene load_steps=17 format=3 uid="uid://7cn3yc8lgewu"]
+
+[ext_resource type="Script" path="res://_scenes/main.gd" id="1_j4fdy"]
+[ext_resource type="Script" path="res://_player/scripts/player.gd" id="1_rxbb2"]
+[ext_resource type="Script" path="res://_scenes/head.gd" id="3_qbo70"]
+[ext_resource type="Script" path="res://_scenes/hud.gd" id="4_cnvke"]
+[ext_resource type="Script" path="res://_misc/platforms/platforms.gd" id="4_v1381"]
+[ext_resource type="PackedScene" uid="uid://bt5ekwppxuajw" path="res://_scenes/hand/hand_watch.tscn" id="4_ymnl2"]
+[ext_resource type="SpriteFrames" uid="uid://xx5rehob5rwm" path="res://_assets/_textures/welcome.gif" id="5_e88g4"]
+[ext_resource type="PackedScene" uid="uid://d4gv7ywkw4dp2" path="res://_misc/platforms/grass.tscn" id="5_j8sue"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_pgvq1"]
+
+[sub_resource type="Sky" id="Sky_yg5oo"]
+sky_material = SubResource("ProceduralSkyMaterial_pgvq1")
+
+[sub_resource type="Environment" id="Environment_i4y0x"]
+background_mode = 2
+sky = SubResource("Sky_yg5oo")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_yb7jg"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yofco"]
+
+[sub_resource type="Animation" id="Animation_g6m6e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.721289, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_njm0v"]
+resource_name = "head_bob"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.721289, 0), Vector3(0, 0.8, 0), Vector3(0, 0.721289, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pcgum"]
+_data = {
+"RESET": SubResource("Animation_g6m6e"),
+"head_bob": SubResource("Animation_njm0v")
+}
+
+[node name="main" type="Node3D"]
+script = ExtResource("1_j4fdy")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i4y0x")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.79578, 0.605586, 0, -0.605586, 0.79578, 0, 0, 0)
+
+[node name="player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25461, 0)
+script = ExtResource("1_rxbb2")
+
+[node name="Camera3D" type="Camera3D" parent="player"]
+transform = Transform3D(-1, 8.74228e-08, 3.82137e-15, 0, -4.37114e-08, 1, 8.74228e-08, 1, 4.37114e-08, 0, 81.7651, 0)
+
+[node name="debugVector" type="RayCast3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0414712, 0.150393, -0.883456)
+target_position = Vector3(0, 0, -9.115)
+debug_shape_custom_color = Color(0.698484, 2.95523e-05, 0.521035, 1)
+debug_shape_thickness = 5
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="player"]
+mesh = SubResource("CapsuleMesh_yb7jg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
+shape = SubResource("CapsuleShape3D_yofco")
+
+[node name="head" type="Node3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.721289, 0)
+script = ExtResource("3_qbo70")
+
+[node name="playerCamera" type="Camera3D" parent="player/head"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="player/head"]
+libraries = {
+"": SubResource("AnimationLibrary_pcgum")
+}
+
+[node name="hand_watch" parent="player/head" instance=ExtResource("4_ymnl2")]
+transform = Transform3D(-0.140896, 0.00589871, 0.0337401, 0.000482105, 0.143161, -0.0230153, -0.0342484, -0.0222518, -0.139129, -0.519041, -1.85673, -0.218451)
+
+[node name="HUD" type="Control" parent="player"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_cnvke")
+
+[node name="facing" type="Label" parent="player/HUD"]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 563.0
+offset_right = 235.0
+offset_bottom = 614.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player/HUD"]
+position = Vector2(400, 250)
+sprite_frames = ExtResource("5_e88g4")
+animation = &"gif"
+autoplay = "gif"
+speed_scale = 4.0
+centered = false
+
+[node name="platforms" type="Node3D" parent="."]
+script = ExtResource("4_v1381")
+
+[node name="grass" parent="platforms" instance=ExtResource("5_j8sue")]
